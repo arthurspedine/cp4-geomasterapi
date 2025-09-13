@@ -1,0 +1,6 @@
+@geomasterapi_cp4_dotnet_HostAddress = http://localhost:5140
+
+GET {{geomasterapi_cp4_dotnet_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
