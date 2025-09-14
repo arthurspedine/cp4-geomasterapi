@@ -2,13 +2,10 @@ using Domain.Interfaces;
 
 namespace Domain
 {
-  public class Esfera : ICalculos3D
+  public class Esfera : FormaCircular, ICalculos3D
   {
-    public double Raio { get; set; }
-
-    public Esfera(double raio)
+    public Esfera(double raio) : base(raio)
     {
-      Raio = raio;
     }
 
     public double CalcularAreaSuperficial()
@@ -18,7 +15,7 @@ namespace Domain
 
     public double CalcularVolume()
     {
-      return (4.0/3.0) * Math.PI * Math.Pow(Raio, 3);
+      return (4.0 / 3.0) * Math.PI * Math.Pow(Raio, 3);
     }
   }
 }

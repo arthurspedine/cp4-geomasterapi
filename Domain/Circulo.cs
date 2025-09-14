@@ -2,13 +2,10 @@ using Domain.Interfaces;
 
 namespace Domain
 {
-  public class Circulo : ICalculos2D
+  public class Circulo : FormaCircular, ICalculos2D
   {
-    public double Raio { get; set; }
-
-    public Circulo(double raio)
+    public Circulo(double raio) : base(raio)
     {
-      Raio = raio;
     }
 
     public double CalcularArea()

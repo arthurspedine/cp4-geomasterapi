@@ -2,21 +2,17 @@ using Dto;
 using Factory;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using Controllers;
 
 [ApiController]
 [Route("api/v1/calculos")]
 [Produces("application/json")]
-public class CalculosController : ControllerBase
+public class CalculosController : BaseCalculosController
 {
-  private readonly ICalculadoraService _calculadoraService;
-  private readonly IFormaFactory _formaFactory;
-
   public CalculosController(
     ICalculadoraService calculadoraService,
-    IFormaFactory formaFactory)
+    IFormaFactory formaFactory) : base(calculadoraService, formaFactory)
   {
-    _calculadoraService = calculadoraService;
-    _formaFactory = formaFactory;
   }
 
   /// <summary>
@@ -58,54 +54,7 @@ public class CalculosController : ControllerBase
   [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
   public IActionResult CalcularArea([FromBody] FormaRequestDto request)
   {
-    try
-    {
-      // Validar se o tipo é suportado
-      if (!_formaFactory.SuportaTipo(request.Tipo))
-      {
-        return BadRequest(new ProblemDetails
-        {
-          Title = "Tipo de forma não suportado",
-          Detail = $"O tipo '{request.Tipo}' não é suportado. Tipos válidos: circulo, retangulo",
-          Status = StatusCodes.Status400BadRequest
-        });
-      }
-
-      // Criar a forma usando a factory
-      var forma = _formaFactory.CriarForma(request.Tipo, request.Propriedades);
-
-      // Calcular a área
-      var area = _calculadoraService.CalcularArea(forma);
-
-      return Ok(ResultadoCalculoDto.CriarResponse(request.Tipo, area, "area"));
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(new ProblemDetails
-      {
-        Title = "Dados de entrada inválidos",
-        Detail = ex.Message,
-        Status = StatusCodes.Status400BadRequest
-      });
-    }
-    catch (InvalidOperationException ex)
-    {
-      return UnprocessableEntity(new ProblemDetails
-      {
-        Title = "Operação não suportada",
-        Detail = ex.Message,
-        Status = StatusCodes.Status422UnprocessableEntity
-      });
-    }
-    catch (Exception)
-    {
-      return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
-      {
-        Title = "Erro interno do servidor",
-        Detail = "Ocorreu um erro inesperado ao processar a solicitação",
-        Status = StatusCodes.Status500InternalServerError
-      });
-    }
+    return ExecutarCalculo(request, _calculadoraService.CalcularArea, "area", "circulo, retangulo");
   }
 
   /// <summary>
@@ -146,54 +95,7 @@ public class CalculosController : ControllerBase
   [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
   public IActionResult CalcularPerimetro([FromBody] FormaRequestDto request)
   {
-    try
-    {
-      // Validar se o tipo é suportado
-      if (!_formaFactory.SuportaTipo(request.Tipo))
-      {
-        return BadRequest(new ProblemDetails
-        {
-          Title = "Tipo de forma não suportado",
-          Detail = $"O tipo '{request.Tipo}' não é suportado. Tipos válidos: circulo, retangulo",
-          Status = StatusCodes.Status400BadRequest
-        });
-      }
-
-      // Criar a forma usando a factory
-      var forma = _formaFactory.CriarForma(request.Tipo, request.Propriedades);
-
-      // Calcular o perímetro
-      var perimetro = _calculadoraService.CalcularPerimetro(forma);
-
-      return Ok(ResultadoCalculoDto.CriarResponse(request.Tipo, perimetro, "perimetro"));
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(new ProblemDetails
-      {
-        Title = "Dados de entrada inválidos",
-        Detail = ex.Message,
-        Status = StatusCodes.Status400BadRequest
-      });
-    }
-    catch (InvalidOperationException ex)
-    {
-      return UnprocessableEntity(new ProblemDetails
-      {
-        Title = "Operação não suportada",
-        Detail = ex.Message,
-        Status = StatusCodes.Status422UnprocessableEntity
-      });
-    }
-    catch (Exception)
-    {
-      return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
-      {
-        Title = "Erro interno do servidor",
-        Detail = "Ocorreu um erro inesperado ao processar a solicitação",
-        Status = StatusCodes.Status500InternalServerError
-      });
-    }
+    return ExecutarCalculo(request, _calculadoraService.CalcularPerimetro, "perimetro", "circulo, retangulo");
   }
 
   /// <summary>
@@ -224,54 +126,7 @@ public class CalculosController : ControllerBase
   [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
   public IActionResult CalcularVolume([FromBody] FormaRequestDto request)
   {
-    try
-    {
-      // Validar se o tipo é suportado
-      if (!_formaFactory.SuportaTipo(request.Tipo))
-      {
-        return BadRequest(new ProblemDetails
-        {
-          Title = "Tipo de forma não suportado",
-          Detail = $"O tipo '{request.Tipo}' não é suportado. Tipos válidos: esfera",
-          Status = StatusCodes.Status400BadRequest
-        });
-      }
-
-      // Criar a forma usando a factory
-      var forma = _formaFactory.CriarForma(request.Tipo, request.Propriedades);
-
-      // Calcular o volume
-      var volume = _calculadoraService.CalcularVolume(forma);
-
-      return Ok(ResultadoCalculoDto.CriarResponse(request.Tipo, volume, "volume"));
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(new ProblemDetails
-      {
-        Title = "Dados de entrada inválidos",
-        Detail = ex.Message,
-        Status = StatusCodes.Status400BadRequest
-      });
-    }
-    catch (InvalidOperationException ex)
-    {
-      return UnprocessableEntity(new ProblemDetails
-      {
-        Title = "Operação não suportada",
-        Detail = ex.Message,
-        Status = StatusCodes.Status422UnprocessableEntity
-      });
-    }
-    catch (Exception)
-    {
-      return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
-      {
-        Title = "Erro interno do servidor",
-        Detail = "Ocorreu um erro inesperado ao processar a solicitação",
-        Status = StatusCodes.Status500InternalServerError
-      });
-    }
+    return ExecutarCalculo(request, _calculadoraService.CalcularVolume, "volume", "esfera");
   }
   
   /// <summary>
@@ -302,53 +157,6 @@ public class CalculosController : ControllerBase
   [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
   public IActionResult CalcularAreaSuperficial([FromBody] FormaRequestDto request)
   {
-    try
-    {
-      // Validar se o tipo é suportado
-      if (!_formaFactory.SuportaTipo(request.Tipo))
-      {
-        return BadRequest(new ProblemDetails
-        {
-          Title = "Tipo de forma não suportado",
-          Detail = $"O tipo '{request.Tipo}' não é suportado. Tipos válidos: esfera",
-          Status = StatusCodes.Status400BadRequest
-        });
-      }
-
-      // Criar a forma usando a factory
-      var forma = _formaFactory.CriarForma(request.Tipo, request.Propriedades);
-
-      // Calcular a área superficial
-      var areaSuperficial = _calculadoraService.CalcularAreaSuperficial(forma);
-
-      return Ok(ResultadoCalculoDto.CriarResponse(request.Tipo, areaSuperficial, "area superficial"));
-    }
-    catch (ArgumentException ex)
-    {
-      return BadRequest(new ProblemDetails
-      {
-        Title = "Dados de entrada inválidos",
-        Detail = ex.Message,
-        Status = StatusCodes.Status400BadRequest
-      });
-    }
-    catch (InvalidOperationException ex)
-    {
-      return UnprocessableEntity(new ProblemDetails
-      {
-        Title = "Operação não suportada",
-        Detail = ex.Message,
-        Status = StatusCodes.Status422UnprocessableEntity
-      });
-    }
-    catch (Exception)
-    {
-      return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
-      {
-        Title = "Erro interno do servidor",
-        Detail = "Ocorreu um erro inesperado ao processar a solicitação",
-        Status = StatusCodes.Status500InternalServerError
-      });
-    }
+    return ExecutarCalculo(request, _calculadoraService.CalcularAreaSuperficial, "area superficial", "esfera");
   }
 }

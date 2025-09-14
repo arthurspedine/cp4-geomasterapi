@@ -2,15 +2,10 @@ using Domain.Interfaces;
 
 namespace Domain
 {
-  public class Retangulo : ICalculos2D
+  public class Retangulo : FormaRetangular, ICalculos2D
   {
-    public double Largura { get; set; }
-    public double Altura { get; set; }
-
-    public Retangulo(double largura, double altura)
+    public Retangulo(double largura, double altura) : base(largura, altura)
     {
-      Largura = largura;
-      Altura = altura;
     }
 
     public double CalcularArea()

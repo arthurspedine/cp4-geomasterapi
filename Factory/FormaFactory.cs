@@ -31,55 +31,23 @@ namespace Factory
     {
       return _criadoresForma.ContainsKey(tipo);
     }
-    
+
     private object CriarCirculo(JsonElement props)
     {
-        if (!props.TryGetProperty("raio", out var raioElement) || 
-            !raioElement.TryGetDouble(out var raio))
-        {
-            throw new ArgumentException("Propriedade 'raio' é obrigatória e deve ser um número válido");
-        }
-
-        if (raio <= 0)
-        {
-            throw new ArgumentException("O raio deve ser maior que zero");
-        }
-
-        return new Circulo(raio);
+      var raio = ValidadorPropriedades.ValidarRaio(props);
+      return new Circulo(raio);
     }
 
     private object CriarRetangulo(JsonElement props)
     {
-        if (!props.TryGetProperty("largura", out var larguraElement) || 
-            !larguraElement.TryGetDouble(out var largura) ||
-            !props.TryGetProperty("altura", out var alturaElement) || 
-            !alturaElement.TryGetDouble(out var altura))
-        {
-            throw new ArgumentException("Propriedades 'largura' e 'altura' são obrigatórias e devem ser números válidos");
-        }
-
-        if (largura <= 0 || altura <= 0)
-        {
-            throw new ArgumentException("Largura e altura devem ser maiores que zero");
-        }
-
-        return new Retangulo(largura, altura);
+      var (largura, altura) = ValidadorPropriedades.ValidarLarguraAltura(props);
+      return new Retangulo(largura, altura);
     }
 
     private object CriarEsfera(JsonElement props)
     {
-        if (!props.TryGetProperty("raio", out var raioElement) || 
-            !raioElement.TryGetDouble(out var raio))
-        {
-            throw new ArgumentException("Propriedade 'raio' é obrigatória e deve ser um número válido");
-        }
-
-        if (raio <= 0)
-        {
-            throw new ArgumentException("O raio deve ser maior que zero");
-        }
-
-        return new Esfera(raio);
+      var raio = ValidadorPropriedades.ValidarRaio(props);
+      return new Esfera(raio);
     }
   }
 }

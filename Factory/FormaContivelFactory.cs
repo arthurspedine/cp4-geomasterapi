@@ -30,35 +30,13 @@ namespace Factory
 
     private IFormaContivel CriarCirculoContivel(JsonElement propriedades)
     {
-      if (!propriedades.TryGetProperty("raio", out var raioElement) ||
-            !raioElement.TryGetDouble(out var raio))
-      {
-        throw new ArgumentException("Propriedade 'raio' é obrigatória e deve ser um número válido");
-      }
-
-      if (raio <= 0)
-      {
-        throw new ArgumentException("O raio deve ser maior que zero");
-      }
-
+      var raio = ValidadorPropriedades.ValidarRaio(propriedades);
       return new CirculoContivel(raio);
     }
 
     private IFormaContivel CriarRetanguloContivel(JsonElement propriedades)
     {
-      if (!propriedades.TryGetProperty("largura", out var larguraElement) ||
-            !larguraElement.TryGetDouble(out var largura) ||
-            !propriedades.TryGetProperty("altura", out var alturaElement) ||
-            !alturaElement.TryGetDouble(out var altura))
-      {
-        throw new ArgumentException("Propriedades 'largura' e 'altura' são obrigatórias e devem ser números válidos");
-      }
-
-      if (largura <= 0 || altura <= 0)
-      {
-        throw new ArgumentException("Largura e altura devem ser maiores que zero");
-      }
-
+      var (largura, altura) = ValidadorPropriedades.ValidarLarguraAltura(propriedades);
       return new RetanguloContivel(largura, altura);
     }
     
