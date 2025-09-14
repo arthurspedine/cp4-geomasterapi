@@ -1,4 +1,6 @@
+using Factory;
 using Microsoft.OpenApi.Models;
+using Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,8 @@ builder.Services.AddSwaggerGen(configurationSwagger =>
 });
 
 // Injeção de dependências como Singleton
+builder.Services.AddSingleton<ICalculadoraService, CalculadoraService>();
+builder.Services.AddSingleton<IFormaFactory, FormaFactory>();
 
 var app = builder.Build();
 
