@@ -26,6 +26,9 @@ builder.Services.AddSwaggerGen(configurationSwagger =>
 builder.Services.AddSingleton<ICalculadoraService, CalculadoraService>();
 builder.Services.AddSingleton<IFormaFactory, FormaFactory>();
 
+builder.Services.AddSingleton<IValidacoesService, ValidacoesService>();
+builder.Services.AddSingleton<IFormaContivelFactory, FormaContivelFactory>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
