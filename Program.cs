@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen(configurationSwagger =>
     {
         Title = "API CP4 GeoMaster",
         Version = "v1",
-        Description = "TODO",
+        Description = "API para cálculos geométricos e validações de formas.",
     });
 
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
