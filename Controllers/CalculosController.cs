@@ -23,7 +23,6 @@ public class CalculosController : BaseCalculosController
   /// <remarks>
   /// Exemplo de request para calcular área de um círculo:
   /// 
-  ///     POST /api/v1/calculos/area
   ///     {
   ///         "tipoForma": "circulo",
   ///         "propriedades": {
